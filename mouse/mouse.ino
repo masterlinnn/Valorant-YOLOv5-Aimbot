@@ -1,8 +1,8 @@
 // DO NOT EDIT EXCEPT THIS.
 ////////////////////////////////////////////////////////////////////////////////////
-float aimDelay = 5.0;
+float aimDelay = 3.0;
 float aimDeceleration = 0.04;
-float sensitivity = 32.7731092437;
+float sensitivity = 6.07315;
 ////////////////////////////////////////////////////////////////////////////////////
 float aimDelayDefault = aimDelay;
 
@@ -190,7 +190,7 @@ int8_t clipping[8];
 void setup()
 {
   Serial.begin(115200);
-  Serial.setTimeout(1);
+  //  Serial.setTimeout(1);
 
   uint8_t attempts = 30;
   while (!Serial && attempts--)
@@ -257,39 +257,49 @@ void loop()
       Serial.print("State: ");
       Serial.println(state);
 
-      if (state == "silent") {
-        //        positive X
-        if (x > 0) {
-          while (x > 0) {
-            Mouse.move(sensitivity, 0, 0);
-            x -= 1;
-          }
-          //        negative X
-        }
-        else if (x < 0) {
-          while (x < 0) {
-            Mouse.move(-sensitivity, 0, 0);
-            x += 1;
-          }
-        }
 
-        //   positive Y
-        if (y > 0) {
-          while (y > 0) {
-            Mouse.move(0, sensitivity, 0);
-            y -= 1;
-          }
+      //        positive X
+      if (x > 0) {
+        while (x > 0) {
+          Mouse.move(sensitivity, 0, 0);
+          x -= 1;
+          delay(aimDelay);
+          aimDelay -= aimDeceleration;
         }
-        //        negative Y
-        else if (y < 0) {
-          while (y < 0) {
-            Mouse.move(0, -sensitivity, 0);
-            y += 1;
-          }
+        //        negative X
+      }
+      else if (x < 0) {
+        while (x < 0) {
+          Mouse.move(-sensitivity, 0, 0);
+          x += 1;
+          delay(aimDelay);
+          aimDelay -= aimDeceleration;
         }
       }
 
+      //   positive Y
+      if (y > 0) {
+        while (y > 0) {
+          Mouse.move(0, sensitivity, 0);
+          y -= 1;
+          delay(aimDelay);
+          aimDelay -= aimDeceleration;
+        }
+      }
+      //        negative Y
+      else if (y < 0) {
+        while (y < 0) {
+          Mouse.move(0, -sensitivity, 0);
+          y += 1;
+          delay(aimDelay);
+          aimDelay -= aimDeceleration;
+        }
+      }
+      if (state == "shoot") {
+        Mouse.click();
+      }
 
+      aimDelay = aimDelayDefault;
       data = "";
     } else {
       data += d;

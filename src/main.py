@@ -7,8 +7,30 @@ import keyboard
 from yaml import load, dump, Loader
 import cv2
 import serial
+from pynput.mouse import Controller
+from pynput import mouse
 
-import onnxruntime
+buttonX1 = False
+buttonX2 = False
+
+mouseController = Controller()
+def on_click(x_, y_, button, pressed):
+    global buttonX1, buttonX2
+    if button == button.x1 and pressed:
+        buttonX1 = True
+    elif button == button.x1 and not pressed:
+        buttonX1 = False
+        
+    if button == button.x2 and pressed:
+        buttonX2 = True
+    elif button == button.x2 and not pressed:
+        buttonX2 = False
+    # print("x: {} | y: {} | button: {} | pressed: {}".format(x_, y_, button, pressed))
+
+mouse_listener = mouse.Listener(
+    on_click=on_click
+)
+mouse_listener.start()
 
 with open("config.yaml", "r") as yml:
     config = load(yml, Loader=Loader)
@@ -35,7 +57,6 @@ def sendCode(code):
     arduino.write(encoded)
     
 
-
 with mss() as sct:
     while True:
         ss = np.array(sct.grab(monitor))
@@ -52,12 +73,19 @@ with mss() as sct:
 
             distance = (head[0] - center, head[1] - center)
 
-            if keyboard.is_pressed(config["keyconfig"]["silent"]):
+            # if keyboard.is_pressed(config["keyconfig"]["silent"]):
+            if buttonX1:
                 # print("head", head[0], head[1])
                 print("head dis", distance[0], distance[1])
                 code = f",{distance[0]},{distance[1]},silent*"
                 sendCode(code)
-                # time.sleep(0.000001)
+                time.sleep(0.01)
+            if buttonX2:
+                # print("head", head[0], head[1])
+                print("head dis", distance[0], distance[1])
+                code = f",{distance[0]},{distance[1]},shoot*"
+                sendCode(code)
+                time.sleep(0.175)
 
         except:
             pass
