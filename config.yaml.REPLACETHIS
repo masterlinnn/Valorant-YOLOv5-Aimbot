@@ -1,0 +1,13 @@
+# REPLACE THIS FILE NAME TO config.yaml
+yolov5:
+  path: full/path/to/yolov5
+  model: full/path/to/model.pt
+
+keyconfig:
+  silent: f
+  shoot: h
+
+arduino:
+  port: COM3
+  baudrate: 115200
+  timeout: 0
