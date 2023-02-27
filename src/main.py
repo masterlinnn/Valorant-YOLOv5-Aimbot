@@ -73,14 +73,15 @@ with mss() as sct:
 
             distance = (head[0] - center, head[1] - center)
 
-            # if keyboard.is_pressed(config["keyconfig"]["silent"]):
-            if buttonX1:
+            if keyboard.is_pressed(config["keyconfig"]["silent"]):
+            # if buttonX1:
                 # print("head", head[0], head[1])
                 print("head dis", distance[0], distance[1])
                 code = f",{distance[0]},{distance[1]},silent*"
                 sendCode(code)
                 time.sleep(0.01)
-            if buttonX2:
+            if keyboard.is_pressed(config["keyconfig"]["shoot"]):
+            # if buttonX2:
                 # print("head", head[0], head[1])
                 print("head dis", distance[0], distance[1])
                 code = f",{distance[0]},{distance[1]},shoot*"
