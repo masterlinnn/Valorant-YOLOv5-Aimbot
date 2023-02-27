@@ -135,14 +135,14 @@ void loop()
         //   positive Y
         if (y > 0) {
           while (y > 0) {
-            Mouse.move(0, -sensitivity, 0);
+            Mouse.move(0, sensitivity, 0);
             y -= 1;
           }
         }
         //        negative Y
         else if (y < 0) {
           while (y < 0) {
-            Mouse.move(0, sensitivity, 0);
+            Mouse.move(0, -sensitivity, 0);
             y += 1;
           }
         }

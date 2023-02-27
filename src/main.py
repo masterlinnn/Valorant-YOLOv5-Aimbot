@@ -8,12 +8,14 @@ from yaml import load, dump, Loader
 import cv2
 import serial
 
+import onnxruntime
+
 with open("config.yaml", "r") as yml:
     config = load(yml, Loader=Loader)
 
 
 # Model
-model = torch.hub.load(config["yolov5"]["path"], "custom", path=config["yolov5"]["model"], source="local")
+model = torch.hub.load(config["yolov5"]["path"], "custom", path=config["yolov5"]["model"], source="local").cuda()
 
 try:
     arduino = serial.Serial(config["arduino"]["port"], int(config["arduino"]["baudrate"]),timeout=config["arduino"]["timeout"])
@@ -31,6 +33,8 @@ monitor = {"top": top, "left": left, "width": size, "height": size}
 def sendCode(code):
     encoded = str.encode(code)
     arduino.write(encoded)
+    
+
 
 with mss() as sct:
     while True:
@@ -50,9 +54,10 @@ with mss() as sct:
 
             if keyboard.is_pressed(config["keyconfig"]["silent"]):
                 # print("head", head[0], head[1])
-                # print("head dis", distance[0], distance[1])
-                code = f",{head[0]},{head[1]},silent*"
+                print("head dis", distance[0], distance[1])
+                code = f",{distance[0]},{distance[1]},silent*"
                 sendCode(code)
+                # time.sleep(0.000001)
 
         except:
             pass
