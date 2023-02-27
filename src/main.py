@@ -6,7 +6,7 @@ import math
 import keyboard
 
 # Model
-model = torch.hub.load("../yolov5", "custom", "../models/valorant-v12.pt")
+model = torch.hub.load("../yolov5/", "custom", path="../models/valorant-v12.pt", source="local")
 
 # Display
 displaySize = (1920,1080)
