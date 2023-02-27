@@ -28,6 +28,10 @@ top = int((displaySize[1] - size) / 2)
 left = int((displaySize[0] - size) / 2)
 monitor = {"top": top, "left": left, "width": size, "height": size}
 
+def sendCode(code):
+    encoded = str.encode(code)
+    arduino.write(encoded)
+
 with mss() as sct:
     while True:
         ss = np.array(sct.grab(monitor))
@@ -45,13 +49,15 @@ with mss() as sct:
             distance = (head[0] - center, head[1] - center)
 
             if keyboard.is_pressed(config["keyconfig"]["silent"]):
-                print("head", head[0], head[1])
-                print("head dis", distance[0], distance[1])
+                # print("head", head[0], head[1])
+                # print("head dis", distance[0], distance[1])
+                code = f",{head[0]},{head[1]},silent*"
+                sendCode(code)
 
         except:
             pass
 
-        cv2.imshow("", ss)
-        if(cv2.waitKey(1) == ord('l')):
-            cv2.destroyAllWindows()
-            break
+        # cv2.imshow("", ss)
+        # if(cv2.waitKey(1) == ord('l')):
+        #     cv2.destroyAllWindows()
+        #     break
